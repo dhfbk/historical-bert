@@ -1,2 +1,2 @@
 # historical-bert
-Historical BERT
+BERToldo, the Historical BERT for Italian
