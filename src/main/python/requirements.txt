@@ -1,0 +1,4 @@
+odfpy
+zipfile36
+chardet
+pytest-shutil
