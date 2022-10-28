@@ -1,5 +1,6 @@
-package eu.fbk.dh.wikisource.structures;
+package eu.fbk.dh.historical_bert.structures;
 
+import com.google.common.collect.HashMultimap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book implements Serializable {
+    HashMultimap<String, String> rawValues;
     String fileName;
+    String link = null;
     String title = null;
     String author = null;
     Integer year = null;
@@ -79,6 +82,22 @@ public class Book implements Serializable {
         }
         book.save(getOutputFile(outputPathFile, checksum));
         md5s.add(checksum);
+    }
+
+    public static String savePlainBook(Book book, Set<String> md5s, File outputPathFile, int min) throws NoSuchAlgorithmException, IOException {
+        if (book.getContent().length() < min) {
+            return null;
+        }
+        String checksum = book.getChecksum(book.label);
+        if (md5s.contains(checksum)) {
+            System.out.printf("[ERR] Checksum already exists: %s%n", book.getFileName());
+        }
+        File outputFile = getOutputFile(outputPathFile, checksum);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+        writer.append(book.getContent());
+        writer.close();
+        md5s.add(checksum);
+        return checksum;
     }
 
     public static File getOutputFile(File outputPath, String md5) {

@@ -1,6 +1,6 @@
-package eu.fbk.dh.wikisource;
+package eu.fbk.dh.historical_bert;
 
-import eu.fbk.dh.wikisource.structures.Book;
+import eu.fbk.dh.historical_bert.structures.Book;
 import me.tongfei.progressbar.ProgressBar;
 
 import java.io.BufferedWriter;
@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 
 public class SaveTexts {
     public static void main(String[] args) {
-        String inputFolder = "/Users/alessio/Desktop/historical-bert/md5-all";
-        String outputFolder = "/Users/alessio/Desktop/historical-bert/txt-out";
+        String inputFolder = "/Users/alessio/Desktop/historical-bert/md5-all-complete";
+        String outputFolder = "/Users/alessio/Desktop/historical-bert/txt-out-complete";
         File inputFile = new File(inputFolder);
         File outputFile = new File(outputFolder);
 
@@ -24,13 +24,13 @@ public class SaveTexts {
             outputFile.mkdirs();
         }
 
-        TreeMap<Integer, String> myMap = new TreeMap<>();
-        myMap.put(1499, "before-1500");
-        myMap.put(1699, "from-1500-to-1700");
-        myMap.put(1899, "from-1700-to-1900");
-        myMap.put(2099, "after-1900");
+        TreeMap<Integer, String> yearsMap = new TreeMap<>();
+        yearsMap.put(1499, "before-1500");
+        yearsMap.put(1699, "from-1500-to-1700");
+        yearsMap.put(1899, "from-1700-to-1900");
+        yearsMap.put(2099, "after-1900");
 
-        for (Map.Entry<Integer, String> entry : myMap.entrySet()) {
+        for (Map.Entry<Integer, String> entry : yearsMap.entrySet()) {
             File thisFolderFile = new File(outputFolder + File.separator + entry.getValue());
             if (!thisFolderFile.exists()) {
                 thisFolderFile.mkdirs();
@@ -52,7 +52,7 @@ public class SaveTexts {
                     skipped++;
                     continue;
                 }
-                for (Map.Entry<Integer, String> entry : myMap.entrySet()) {
+                for (Map.Entry<Integer, String> entry : yearsMap.entrySet()) {
                     if (book.getYear() < entry.getKey()) {
                         File thisFile = new File(outputFolder + File.separator + entry.getValue() + File.separator + file.getName() + ".txt");
                         String str = book.getContent();

@@ -1,7 +1,7 @@
-package eu.fbk.dh.wikisource.old;
+package eu.fbk.dh.historical_bert.old;
 
-import eu.fbk.dh.wikisource.mt.DiffCalculator;
-import eu.fbk.dh.wikisource.structures.Book;
+import eu.fbk.dh.historical_bert.mt.DiffCalculator;
+import eu.fbk.dh.historical_bert.structures.Book;
 import eu.fbk.utils.core.CommandLine;
 
 import java.io.BufferedWriter;

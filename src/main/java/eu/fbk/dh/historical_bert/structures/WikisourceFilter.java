@@ -1,4 +1,5 @@
-package eu.fbk.dh.wikisource.structures;
+package eu.fbk.dh.historical_bert.structures;
+
 
 import com.google.common.collect.HashMultimap;
 
@@ -81,6 +82,11 @@ public class WikisourceFilter extends Filter {
         content = content.trim();
 
         book.setContent(content);
+        book.setRawValues(values);
+        if (values.containsKey("LINK")) {
+            Optional<String> longestString = values.get("LINK").stream().max(Comparator.comparingInt(String::length));
+            longestString.ifPresent(book::setLink);
+        }
         if (values.containsKey("AUTHOR")) {
             Optional<String> longestString = values.get("AUTHOR").stream().max(Comparator.comparingInt(String::length));
             longestString.ifPresent(book::setAuthor);

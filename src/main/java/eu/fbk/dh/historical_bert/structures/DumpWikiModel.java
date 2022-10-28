@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource.structures;
+package eu.fbk.dh.historical_bert.structures;
 //
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by FernFlower decompiler)

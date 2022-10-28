@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource.old;
+package eu.fbk.dh.historical_bert.old;
 
 import eu.fbk.utils.core.CommandLine;
 import org.slf4j.Logger;

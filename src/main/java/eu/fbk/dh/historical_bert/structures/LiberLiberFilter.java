@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource.structures;
+package eu.fbk.dh.historical_bert.structures;
 
 import java.io.File;
 import java.io.IOException;

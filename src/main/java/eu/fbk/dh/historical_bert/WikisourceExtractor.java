@@ -1,9 +1,9 @@
-package eu.fbk.dh.wikisource;
+package eu.fbk.dh.historical_bert;
 
 import com.google.common.collect.HashMultimap;
-import eu.fbk.dh.wikisource.structures.DumpWikiModel;
-import eu.fbk.dh.wikisource.structures.PlainTextLinksConverter;
-import eu.fbk.dh.wikisource.structures.WikiPage;
+import eu.fbk.dh.historical_bert.structures.DumpWikiModel;
+import eu.fbk.dh.historical_bert.structures.PlainTextLinksConverter;
+import eu.fbk.dh.historical_bert.structures.WikiPage;
 import eu.fbk.utils.core.CommandLine;
 import info.bliki.api.creator.TopicData;
 import info.bliki.api.creator.WikiDB;
@@ -13,6 +13,7 @@ import info.bliki.wiki.dump.WikiArticle;
 import info.bliki.wiki.dump.WikiXMLParser;
 import info.bliki.wiki.filter.Encoder;
 import org.apache.commons.io.FileUtils;
+import org.luaj.vm2.ast.Str;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
@@ -33,6 +34,8 @@ public class WikisourceExtractor {
     public static Pattern indexPattern = Pattern.compile("^(Indice|Index):(.*)");
     public static Pattern langPattern = Pattern.compile("^[a-z]{1,10}:");
     public static Pattern pagesPattern = Pattern.compile("<pages[^>]*index=\"([^\"]*)\"[^>]*/>", Pattern.MULTILINE);
+    public static Pattern categoryPattern = Pattern.compile("\\[\\[Categoria:([^]|]+).*\\]\\]");
+    public static Pattern headerPattern = Pattern.compile("^([A-Z]+):(.*)$");
 
     public static Set<String> removeTemplates = new HashSet<>();
     public static Set<String> removeStrings = new HashSet<>();
@@ -139,6 +142,15 @@ public class WikisourceExtractor {
             DumpWikiModel wikiModel = new DumpWikiModel(wikiDB, siteinfo, "${image}", "${title}", new File(imageDirectory));
             wikiModel.setUp();
             builder = new StringBuilder();
+
+            String wikipediaRawSource = wikiModel.getRedirectedWikiContent(text, new HashMap<>());
+            Matcher categoryMatcher = categoryPattern.matcher(wikipediaRawSource);
+            while (categoryMatcher.find()) {
+                builder.append("-- HEADER").append("\n");
+                builder.append("CATEGORY: ").append(categoryMatcher.group(1)).append("\n");
+                builder.append("-- END OF HEADER --").append("\n");
+            }
+
             PlainTextLinksConverter plainTextLinksConverter = new PlainTextLinksConverter(keepLinks);
             wikiModel.render(plainTextLinksConverter, text, builder, true, true);
             lines = new BufferedReader(new StringReader(builder.toString()))
@@ -165,7 +177,6 @@ public class WikisourceExtractor {
                 okLines.add(line);
             }
 
-            builder = new StringBuilder();
             for (int i = okLines.size() - 1; i >= 0; i--) {
                 String line = okLines.get(i);
                 line = line.replaceAll("</?poem>", "");
@@ -271,6 +282,12 @@ public class WikisourceExtractor {
                     }
                     WikiPage wikiPage = getFinalText(text, siteinfo, false);
                     text = wikiPage.getText();
+
+                    text = "-- HEADER\n" +
+                            "LINK: " + Encoder.encodeTitleToUrl(title, true) + "\n" +
+                            "-- END OF HEADER --\n" +
+                            "" + text;
+
                     links.put(title, wikiPage.getLinks());
                     djvuLinks.put(title, wikiPage.getDjvuLinks());
 
@@ -519,7 +536,7 @@ public class WikisourceExtractor {
 //                }
 //            }
 
-            System.out.println("Third pass - write graph data:");
+//            System.out.println("Third pass - write graph data:");
 //            if (USE_COMMUNITIES) {
 //                Set<String> vertices = new HashSet<>();
 //                FrequencyHashSet<String> frequencyHashSet = new FrequencyHashSet();
@@ -595,6 +612,7 @@ public class WikisourceExtractor {
                     System.out.println(" " + String.format("%7d", counter));
                 }
                 String titleURL = Encoder.encodeTitleLocalUrl(title);
+                String titleRealURL = Encoder.encodeTitleToUrl(title, true);
 
                 StringBuilder header = new StringBuilder();
 
@@ -608,21 +626,36 @@ public class WikisourceExtractor {
                     File candidateFile = new File(candidateFileName);
                     boolean isHeader = false;
                     boolean somethingIsAdded = false;
+                    boolean beforeHeader = true;
+                    StringBuilder beforeHeaderText = new StringBuilder();
+                    beforeHeaderText.append("LINK: ").append(titleRealURL).append("\n");
                     if (candidateFile.exists()) {
                         BufferedReader reader = new BufferedReader(new FileReader(candidateFile));
                         String line;
                         while ((line = reader.readLine()) != null) {
+                            if (beforeHeader) {
+                                Matcher headerMatcher = headerPattern.matcher(line);
+                                if (headerMatcher.find()) {
+                                    beforeHeaderText.append(line).append("\n");
+                                    continue;
+                                }
+                                else {
+                                    beforeHeader = false;
+                                }
+                            }
                             if (line.startsWith("-- HEADER")) {
                                 isHeader = true;
                                 somethingIsAdded = true;
                             }
                             if (line.startsWith("-- END OF HEADER --")) {
-                                header.append(line);
+                                header.append(line).append("\n");
                                 isHeader = false;
                             }
 
                             if (isHeader) {
                                 header.append(line).append("\n");
+                                header.append(beforeHeaderText);
+                                beforeHeaderText = new StringBuilder();
                             }
                         }
                         reader.close();

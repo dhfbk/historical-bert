@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource;
+package eu.fbk.dh.historical_bert;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

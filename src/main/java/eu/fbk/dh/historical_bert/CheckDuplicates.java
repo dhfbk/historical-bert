@@ -1,6 +1,6 @@
-package eu.fbk.dh.wikisource;
+package eu.fbk.dh.historical_bert;
 
-import eu.fbk.dh.wikisource.structures.Book;
+import eu.fbk.dh.historical_bert.structures.Book;
 import me.tongfei.progressbar.ProgressBar;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,10 +17,11 @@ public class CheckDuplicates {
         String folder1Name = "/Users/alessio/Desktop/historical-bert/md5-ws";
         String folder2Name = "/Users/alessio/Desktop/historical-bert/md5-ll";
         String wikidataName = "/Users/alessio/Desktop/historical-bert/wikidata_it.tsv";
-        String outputFolderName = "/Users/alessio/Desktop/historical-bert/md5-all";
+        String outputFolderName = "/Users/alessio/Desktop/historical-bert/md5-all-complete";
         float delta = 0.9f;
         boolean keepFirstDefault = true;
         boolean transferYear = true;
+        boolean keepDuplicates = true;
 
         File duplicateFile = new File(duplicateFileName);
         File folder1 = new File(folder1Name);
@@ -112,13 +113,13 @@ public class CheckDuplicates {
 
 //                System.out.printf("%d - %d%n", book1.getYear(), book2.getYear());
 //                System.out.printf("%d - %d - %s%n", size1, size2, keepFirst);
+                if (transferYear) {
+                    yearsToUpdate.put(file2, book1.getYear());
+                }
                 if (keepFirst) {
                     toBeRemoved.add(file2);
                 } else {
                     toBeRemoved.add(file1);
-                    if (transferYear) {
-                        yearsToUpdate.put(file2, book1.getYear());
-                    }
                 }
             }
 
@@ -137,7 +138,7 @@ public class CheckDuplicates {
             int skippedCount = 0;
             for (File file : files) {
                 pb.step();
-                if (toBeRemoved.contains(file)) {
+                if (toBeRemoved.contains(file) && !keepDuplicates) {
                     continue;
                 }
                 Book book = Book.load(file);

@@ -1,8 +1,8 @@
-package eu.fbk.dh.wikisource;
+package eu.fbk.dh.historical_bert;
 
 import com.google.common.collect.HashMultimap;
-import eu.fbk.dh.wikisource.structures.Book;
-import eu.fbk.dh.wikisource.structures.RichGraph;
+import eu.fbk.dh.historical_bert.structures.Book;
+import eu.fbk.dh.historical_bert.structures.RichGraph;
 import eu.fbk.utils.core.CommandLine;
 import me.tongfei.progressbar.ProgressBar;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class FindDuplicatesOnTitles {
+public class FindDuplicates {
 
     private static String UNKNOWN_LABEL = "UNKNOWN";
 

@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource.structures;
+package eu.fbk.dh.historical_bert.structures;
 
 import com.google.common.collect.HashMultimap;
 import lombok.AllArgsConstructor;

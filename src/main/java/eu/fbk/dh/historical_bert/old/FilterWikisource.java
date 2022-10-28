@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource.old;
+package eu.fbk.dh.historical_bert.old;
 
 import com.google.common.collect.HashMultimap;
 import eu.fbk.utils.core.CommandLine;

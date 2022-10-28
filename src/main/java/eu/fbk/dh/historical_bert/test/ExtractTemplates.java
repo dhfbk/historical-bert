@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource.test;
+package eu.fbk.dh.historical_bert.test;
 
 import eu.fbk.twm.utils.ExtractorParameters;
 import eu.fbk.twm.wiki.xmldump.WikipediaTemplateContentExtractor;

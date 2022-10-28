@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource.test;
+package eu.fbk.dh.historical_bert.test;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;

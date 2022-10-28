@@ -1,8 +1,7 @@
-package eu.fbk.dh.wikisource;
+package eu.fbk.dh.historical_bert.old;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import eu.fbk.twm.utils.CommandLineWithLogger;
 import eu.fbk.twm.utils.ExtractorParameters;
 import eu.fbk.twm.wiki.xmldump.AbstractWikipediaExtractor;
 import eu.fbk.utils.core.CommandLine;
@@ -15,7 +14,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.SimpleFSDirectory;
 //import org.slf4j.LoggerFactory;
 
 import java.io.File;

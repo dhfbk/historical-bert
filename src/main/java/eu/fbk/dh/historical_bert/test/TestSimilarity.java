@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource.test;
+package eu.fbk.dh.historical_bert.test;
 
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.commons.text.similarity.FuzzyScore;

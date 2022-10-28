@@ -1,4 +1,4 @@
-package eu.fbk.dh.wikisource.structures;
+package eu.fbk.dh.historical_bert.structures;
 
 import info.bliki.htmlcleaner.TagNode;
 import info.bliki.wiki.filter.ITextConverter;
